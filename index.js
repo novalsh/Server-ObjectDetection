@@ -1,9 +1,12 @@
-import express from 'express';
-import cors from 'cors';
-import UserRoute from './routes/Users';
-import BranchRoute from './routes/Branch';
-import HistoryRoute from './routes/History';
-import SensorRoute from './routes/Sensor';
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const UserRoute = require('./app/routes/users');
+const BranchRoute = require('./app/routes/branch');
+const HistoryRoute = require('./app/routes/history');
+const SensorRoute = require('./app/routes/sensor');
+
+
 
 const app = express();
 app.use(cors());
@@ -13,6 +16,6 @@ app.use(BranchRoute)
 app.use(HistoryRoute)
 app.use(SensorRoute)
 
-app.listen(1000, () => {
-    console.log('Server on port 1000');
+app.listen(3000, () => {
+    console.log('Server on port 3000');
 })

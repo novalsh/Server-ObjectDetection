@@ -1,6 +1,6 @@
-import User from "../models/User";
+const User = require('../models/Users');
 
-export const getUser = async (req, res, ) => {
+const getUser = async (req, res, ) => {
  const { id } = req.params;
     try {
         const user = await User.findByPk(id);
@@ -10,7 +10,7 @@ export const getUser = async (req, res, ) => {
     }
 };
 
-export const getUsers = async (req, res) => {
+const getUsers = async (req, res) => {
   try {
     const users = await User.findAll();
     res.json(users);
@@ -19,7 +19,7 @@ export const getUsers = async (req, res) => {
   }
 };
 
-export const createUser = async (req, res) => {
+const createUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const user = await User.create({
@@ -33,7 +33,7 @@ export const createUser = async (req, res) => {
   }
 };
 
-export const updateUser = async (req, res) => {
+const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email, password } = req.body;
@@ -53,7 +53,7 @@ export const updateUser = async (req, res) => {
   }
 };
 
-export const deleteUser = async (req, res) => {
+const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.destroy({
@@ -64,3 +64,5 @@ export const deleteUser = async (req, res) => {
     console.log(error);
   }
 };
+
+module.exports = { getUser, getUsers, createUser, updateUser, deleteUser };

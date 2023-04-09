@@ -1,8 +1,8 @@
 'use strict';
 
-const { Model } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../../config/database');
 
-module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.belongsTo(models.Branch, { foreignKey: 'branch_id' });
@@ -60,10 +60,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
-    timestamps: true,
-    paranoid: true,
     tableName: 'users'
   });
 
-  return User;
-};
+module.exports = User;

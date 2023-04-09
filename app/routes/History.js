@@ -1,9 +1,9 @@
-import express from 'express';
-import { getHistorys, getHistory} from '../controllers/History';
+const express = require('express');
+const { getHistorys, getHistory} = require('../controllers/HistoryController');
 
 const router = express.Router();
 
 router.get('/api/history', getHistorys);
 router.get('/api/history/:id', getHistory);
 
-export default router;
+module.exports = router;

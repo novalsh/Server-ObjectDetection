@@ -1,8 +1,8 @@
 'use strict';
 
-const { Model } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../../config/database');
 
-module.exports = (sequelize, DataTypes) => {
   class History extends Model {
     static associate(models) {
       History.belongsTo(models.User, { foreignKey: 'user_id' });
@@ -60,10 +60,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'History',
-    timestamps: true,
-    paranoid: true,
     tableName: 'history'
   });
 
-  return History;
-};
+  module.exports = History;

@@ -1,5 +1,5 @@
-import express from 'express';
-import { getSensors, getSensor, createSensor, updateSensor, deleteSensor } from '../controllers/Sensor';
+const express = require('express');
+const { getSensors, getSensor, createSensor, updateSensor, deleteSensor } = require('../controllers/SensorController');
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.post('/api/sensor', createSensor);
 router.put('/api/sensor/:id', updateSensor);
 router.delete('/api/sensor/:id', deleteSensor);
 
-export default router;
+module.exports = router;
