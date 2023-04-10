@@ -1,11 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const UserRoute = require('./app/routes/users');
-const BranchRoute = require('./app/routes/branch');
-const HistoryRoute = require('./app/routes/history');
-const SensorRoute = require('./app/routes/sensor');
-const AuthRoute = require('./app/routes/auth');
+const UserRoute = require('./app/routes/Users');
+const BranchRoute = require('./app/routes/Branch');
+const HistoryRoute = require('./app/routes/History');
+const SensorRoute = require('./app/routes/Sensor');
+
+
 
 const app = express();
 app.use(cors());
