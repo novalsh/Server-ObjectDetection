@@ -19,7 +19,35 @@ const getSensors = async (req, res) => {
   }
 };
 
-const createSensor = async (req, res) => { };
+const createSensor = async (req, res) => {
+  try {
+    const { branch_id, from_time, to_time, latitude, longitude, status, conditional } = req.body;
+
+    if (!branch_id || !from_time || !to_time || !latitude || !longitude || !status || !conditional) {
+      return res.status(400).json({
+        message: 'All fields are required.',
+      });
+    }
+
+    const sensor = await Sensor.create({
+      branch_id,
+      from_time,
+      to_time,
+      latitude,
+      longitude,
+      status,
+      conditional,
+    });
+
+    res.status(201).json(sensor);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'An error occurred while creating the sensor.',
+      error: error.message,
+    });
+  }
+};
 
 const updateSensor = async (req, res) => { };
 

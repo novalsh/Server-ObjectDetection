@@ -5,12 +5,13 @@ const UserRoute = require('./app/routes/users');
 const BranchRoute = require('./app/routes/branch');
 const HistoryRoute = require('./app/routes/history');
 const SensorRoute = require('./app/routes/sensor');
-
-
+const AuthRoute = require('./app/routes/auth');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.use(AuthRoute)
 app.use(UserRoute)
 app.use(BranchRoute)
 app.use(HistoryRoute)
