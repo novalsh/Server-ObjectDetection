@@ -63,4 +63,32 @@ const deleteSensor = async (req, res) => {
   }
 };
 
-module.exports = { getSensor, getSensors, createSensor, updateSensor, deleteSensor };
+const updateAllSensorTimes = async (req, res) => {
+  try {
+    console.log(req.user.branch_id);
+    const { from_time, to_time } = req.body;
+    const loggedInAdminBranchId = req.user.branch_id;
+
+    const [affectedRows] = await Sensor.update(
+      {
+        from_time,
+        to_time,
+      },
+      {
+        where: {branch_id : loggedInAdminBranchId},
+      }
+    );
+
+    res.json({
+      message: `Updated ${affectedRows} sensor(s)`,
+      from_time,
+      to_time,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while updating the sensors' });
+  }
+};
+
+
+module.exports = { getSensor, getSensors, createSensor, updateSensor, deleteSensor, updateAllSensorTimes };
