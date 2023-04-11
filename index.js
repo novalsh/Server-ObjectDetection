@@ -5,6 +5,7 @@ const UserRoute = require('./app/routes/Users');
 const BranchRoute = require('./app/routes/Branch');
 const HistoryRoute = require('./app/routes/History');
 const SensorRoute = require('./app/routes/Sensor');
+const AuthRoute = require('./app/routes/Auth');
 
 
 
