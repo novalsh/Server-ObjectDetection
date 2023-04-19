@@ -1,13 +1,25 @@
 const Branch = require('../models/Branch');
+const jwt = require('jsonwebtoken');
+
+const jwtSecret = process.env.JWT_SECRET;
 
 const getBranch = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const branch = await Branch.findByPk(id);
-        res.json(branch);
-    } catch (error) {
-        console.log(error);
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized' });
     }
+    
+    try {
+      const decoded = jwt.verify(token, jwtSecret);
+      const { id } = decoded;
+      const branch = await Branch.findByPk(id);
+      res.json(branch);
+    } catch (error) {
+      console.error(error);
+      res.status(401).json({ message: 'Invalid token' });
+    }
+    
 };
 
 const getBranches = async (req, res) => {
