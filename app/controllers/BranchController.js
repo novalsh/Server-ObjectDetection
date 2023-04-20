@@ -15,11 +15,8 @@ const getBranch = async (req, res) => {
 
 const getBranchByToken = async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
-    const decoded = jwt.decode(token);
-    const id = decoded.branch_id;
-    const idbranch = parseInt(id);
-    const branches = await Branch.findByPk(idbranch);
+    const id = req.user.branch_id;
+    const branches = await Branch.findByPk(id);
     res.json(branches);
   } catch (error) {
     console.log(error);

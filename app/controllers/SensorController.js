@@ -65,9 +65,9 @@ const deleteSensor = async (req, res) => {
 
 const updateAllSensorTimes = async (req, res) => {
   try {
-    console.log(req.user.branch_id);
     const { from_time, to_time } = req.body;
     const loggedInAdminBranchId = req.user.branch_id;
+    console.log(req.user)
 
     const [affectedRows] = await Sensor.update(
       {

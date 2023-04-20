@@ -5,50 +5,59 @@ const User = require('../models/Users');
 const jwtSecret = process.env.JWT_SECRET;
 
 const login = async (req, res) => {
-    const { email, password } = req.body;
-  
-    try {
-      const user = await User.findOne({ where: { email } });
-  
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-  
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-  
-      if (!isPasswordValid) {
-        return res.status(401).json({ message: 'Invalid password' });
-      }
-  
-      const token = jwt.sign({ id: user.id, role: user.role, branch_id: user.branch_id }, jwtSecret, {
-        expiresIn: '1h',
-      });
-  
-      res.json({ token, role: user.role });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { email } });
+
+    const { id, name, role, status, condition, branch_id } = user;
+    const modifiedUser = { id, name, email, role, status, condition, branch_id };
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
-  };
-  
-  const protect = async (req, res, next) => {
-    const token = req.headers.authorization?.split(' ')[1];
-  
-    if (!token) {
-      return res.status(401).json({ message: 'Unauthorized' });
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid password' });
     }
-  
-    try {
-      const decoded = jwt.verify(token, jwtSecret);
-      req.user = decoded;
-      next();
-    } catch (error) {
-      console.error(error);
-      res.status(401).json({ message: 'Invalid token' });
-    }
-  };
-  
-  module.exports = {
-    login,
-    protect,
-  };
+
+    const token = jwt.sign({ id: user.id, role: user.role, branch_id: user.branch_id }, jwtSecret, {
+      expiresIn: '1h',
+    });
+
+    res.json({ token, user:modifiedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const protect = async (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, jwtSecret);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ message: 'Invalid token' });
+  }
+};
+
+function generateToken(payload) {
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+  return token;
+}
+
+module.exports = {
+  login,
+  protect,
+  generateToken,
+};
