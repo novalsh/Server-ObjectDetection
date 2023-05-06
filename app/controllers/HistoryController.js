@@ -19,6 +19,18 @@ const getHistory = async (req, res) => {
     }
 }
 
+const getHistoryByToken = async (req, res) => {
+    try {
+        const loggedInAdminBranchId = req.user.branch_id;
+        const dataHistory = await History.findAll({
+            where: { branch_id: loggedInAdminBranchId },
+        });
+        res.json(dataHistory);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const createHistory = async (req, res) => {
     try {
       const { name, description, date, photo_url, user_id, branch_id } = req.body;
@@ -41,5 +53,5 @@ const createHistory = async (req, res) => {
 
 
 
-module.exports = { getHistorys, getHistory, createHistory };
+module.exports = { getHistorys, getHistoryByToken, getHistory, createHistory };
 

@@ -19,6 +19,18 @@ const getSensors = async (req, res) => {
   }
 };
 
+const getSensorByToken = async (req, res) => {
+  try {
+    const loggedInAdminBranchId = req.user.branch_id;
+    const sensor = await Sensor.findAll({
+      where: { branch_id: loggedInAdminBranchId },
+    });
+    res.json(sensor);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const createSensor = async (req, res) => {
   try {
     const { branch_id, from_time, to_time, latitude, longitude, status, conditional } = req.body;
@@ -91,4 +103,4 @@ const updateAllSensorTimes = async (req, res) => {
 };
 
 
-module.exports = { getSensor, getSensors, createSensor, updateSensor, deleteSensor, updateAllSensorTimes };
+module.exports = { getSensor, getSensors,getSensorByToken, createSensor, updateSensor, deleteSensor, updateAllSensorTimes };
