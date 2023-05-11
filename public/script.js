@@ -7,7 +7,7 @@ socket.on("connect", () => console.log("Connected to server"));
 
 const createBubbleChat = chat => {
     const message = document.createElement("div");
-    div_message.classList.add("pesan");
+    div_message.classList.add("message");
     div_message.innerHTML = chat;
     return div_message;
 };
