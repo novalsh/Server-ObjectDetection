@@ -1,18 +1,18 @@
-.container-message {
+.container-pesan {
     border:2px solid #ccc;
     border-radius : 5px;
     padding : 10px;
     margin-bottom: 10px;
 }
 
-.message {
+.pesan {
     border : 2px solid black;
     border-radius : 5px;
     padding : 10px;
     margin-bottom: 5px 0;
 }
 
-.message-r{
+.pesan-r{
     border : 2px solid green;
     text-align: right;
 }

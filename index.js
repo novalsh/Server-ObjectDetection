@@ -26,12 +26,10 @@ app.use(BranchRoute);
 app.use(HistoryRoute);
 app.use(SensorRoute);
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
-
-  socket.on("send-message", (message) => {
-    console.log(message);
-    socket.broadcast.emit("receive-message", message);
+io.on("connection", socket => {
+  console.log("New client connected");
+  socket.on("kirim-pesan", pesan => {
+      socket.broadcast.emit("pesan-baru", pesan)
   });
 
   //join  with name and branch_id
@@ -45,27 +43,27 @@ io.on("connection", (socket) => {
     const branchUsers = user.branch_id;
 
     io.to(user.branch_id).emit(
-      "message",
+      "pesan",
       "Selamat Datang di " + user.branch_id
     );
 
     socket.broadcast
       .to(user.branch_id)
       .emit(
-        "message",
+        "pesan",
         formatMessage("ChatBot Admin", `${user.name} has joined the chat`)
       );
 
     // Runs when client disconnects
     socket.on("disconnect", () => {
       io.emit(
-        "message",
+        "pesan",
         formatMessage("ChatBot Admin", `${user.name} has left the chat`)
       );
     });
   });
 
-  socket.emit("message", formatMessage("ChatBot Admin", "Welcome to ChatCord"));
+  socket.emit("pesan", formatMessage("ChatBot Admin", "Welcome to ChatCord"));
 });
 
 server.listen(3000, () => {
