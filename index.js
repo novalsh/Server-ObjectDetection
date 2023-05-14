@@ -27,15 +27,15 @@ app.use(BranchRoute);
 app.use(HistoryRoute);
 app.use(SensorRoute);
 
-io.on("connection", socket => {
+io.on("connect", socket => {
   console.log("New client connected");
   socket.on("kirim-pesan", pesan => {
       socket.broadcast.emit("pesan-baru", pesan)
   });
 
   //join  with name and branch_id
-  socket.on("joinBranch", ({ name, branch_id }) => {
-    const user = userJoin(socket.id, name, branch_id);
+  socket.on("joinBranch", ({ username, branch_id }) => {
+    const user = userJoin(socket.id, username, branch_id);
 
     console.log(user);
 
@@ -52,14 +52,14 @@ io.on("connection", socket => {
       .to(user.branch_id)
       .emit(
         "pesan",
-        formatMessage("ChatBot Admin", `${user.name} has joined the chat`)
+        formatMessage("ChatBot Admin", `${user.username} has joined the chat`)
       );
 
     // Runs when client disconnects
     socket.on("disconnect", () => {
       io.emit(
         "pesan",
-        formatMessage("ChatBot Admin", `${user.name} has left the chat`)
+        formatMessage("ChatBot Admin", `${user.username} has left the chat`)
       );
     });
   });

@@ -14,7 +14,7 @@ const popupBtnLogin = document.getElementById("popup-btn-login");
 const socket = io();
 socket.on("connect", () => console.log("Connected to server"));
 
-const { name, branch_id } = Qs.parse(location.search, {
+const { username, branch_id } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
 
@@ -22,10 +22,11 @@ login();
 updateSensorStatus(false);
 
 function login() {
-    if (name && branch_id) {
+  console.log(username, branch_id)
+    if (username && branch_id) {
       overlayLogin.style.display = "none";
       popupLogin.style.display = "none";
-      personLogin.textContent = `${name} - ${branch_id}`;
+      personLogin.textContent = `${username} - ${branch_id}`;
     } else {
       overlayLogin.style.display = "block";
       popupLogin.style.display = "block";
@@ -48,7 +49,7 @@ function login() {
     }
 }
 
-const createBubbleChat = (chat) => {
+const createBubbleChat = chat => {
   const div_pesan = document.createElement("div");
   div_pesan.classList.add("pesan");
   div_pesan.innerHTML = chat;
@@ -59,13 +60,14 @@ btn_kirim.addEventListener("click", () => {
   const bubbleChat = createBubbleChat(input.value);
   div_display.appendChild(bubbleChat);
   socket.emit("kirim-pesan", input.value);
-  input.value = "";
+  input.value = '';
 });
 
-socket.on("pesan-baru", (pesan) => {
-  const bubbleChat = createBubbleChat(pesan);
-  bubbleChat.classList.add("pesan-r");
-  div_display.appendChild(bubbleChat);
+socket.on("pesan-baru", pesan => {
+ const bubbleChat = createBubbleChat(pesan); 
+ bubbleChat.classList.add("pesan-r");
+ div_display.appendChild(bubbleChat);
 });
 
-socket.emit("joinBranch", { name, branch_id });
+
+socket.emit("joinBranch", { username, branch_id });
