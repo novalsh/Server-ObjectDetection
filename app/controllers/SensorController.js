@@ -61,7 +61,10 @@ const createSensor = async (req, res) => {
   }
 };
 
-const updateSensor = async (req, res) => { };
+const updateSensor = async (req, res) => { 
+// socket ngetrigger krim data ke client(hp)
+
+};
 
 const deleteSensor = async (req, res) => {
   try {

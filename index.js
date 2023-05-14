@@ -27,11 +27,7 @@ app.use(BranchRoute);
 app.use(HistoryRoute);
 app.use(SensorRoute);
 
-io.on("connect", socket => {
-  console.log("New client connected");
-  socket.on("kirim-pesan", pesan => {
-      socket.broadcast.emit("pesan-baru", pesan)
-  });
+io.on("connection", socket => {
 
   //join  with name and branch_id
   socket.on("joinBranch", ({ username, branch_id }) => {
@@ -41,7 +37,11 @@ io.on("connect", socket => {
 
     socket.join(user.branch_id);
 
-    const branchUsers = user.branch_id;
+    socket.on("kirim-pesan", pesan => {
+      console.log(pesan)
+      socket.broadcast.to(user.branch_id).emit("pesan-baru", pesan)
+      // disini
+    });
 
     io.to(user.branch_id).emit(
       "pesan",
