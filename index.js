@@ -9,6 +9,7 @@ const BranchRoute = require("./app/routes/Branch");
 const HistoryRoute = require("./app/routes/History");
 const SensorRoute = require("./app/routes/Sensor");
 const AuthRoute = require("./app/routes/Auth");
+const { userJoin } = require("./utils/users");
 
 const app = express();
 const server = require("http").Server(app);
