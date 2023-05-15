@@ -1,4 +1,18 @@
 const History = require('../models/History');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './storage/app/public/upload')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
+const upload = multer({ storage: storage }).single('photo_url')
+
+
 
 const getHistorys = async (req, res) => {
     try {
@@ -48,10 +62,6 @@ const createHistory = async (req, res) => {
       console.log(error);
       res.status(500).json({ message: 'Terjadi kesalahan saat menyimpan data.' });
     }
-  };
+};
 
-
-
-
-module.exports = { getHistorys, getHistoryByToken, getHistory, createHistory };
-
+module.exports = { getHistoryByToken, createHistory, upload };
