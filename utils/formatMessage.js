@@ -1,9 +1,13 @@
 const moment = require('moment');
 
-function formatMessage(username, text) {
+function formatMessage(id, branch_id, latitude, longitude, status, conditional, time) {
     return {
-        username,
-        text,
+        id,
+        branch_id,
+        latitude,
+        longitude,
+        status,
+        conditional,
         time: moment().format('h:mm a')
     }
 }
