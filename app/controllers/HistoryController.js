@@ -64,4 +64,4 @@ const createHistory = async (req, res) => {
     }
 };
 
-module.exports = { getHistoryByToken, createHistory, upload };
+module.exports = { getHistoryByToken, createHistory, upload, getHistorys, getHistory};

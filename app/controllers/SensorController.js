@@ -81,24 +81,46 @@ const createSensor = async (req, res) => {
 };
 
 const updateSensor = async (req, res) => {
-  const branchId = req.params.branchId;
   try {
-    // Ambil data terakhir dari tabel history untuk branch_id yang diberikan
-    const latestHistory = await History.findOne({
-      where: { branch_id: branchId },
-      order: [["timestamp", "DESC"]],
-    });
+    const { id } = req.params;
+    const {
+      branch_id,
+      from_time,
+      to_time,
+      latitude,
+      longitude,
+      status,
+      conditional,
+    } = req.body;
 
-    // Ambil nilai status terakhir dari data yang diperoleh
-    const dataEmergency = latestHistory.status;
+    const sensor = await Sensor.update(
+      {
+        branch_id,
+        from_time,
+        to_time,
+        latitude,
+        longitude,
+        status,
+        conditional,
+      },
+      {
+        where: { id },
+      }
+    );
+    res.json(sensor);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    if (dataEmergency) {
-      socket.broadcast
-        .to(branchId)
-        .emit("dataEmergency", formatMessage(`${user.username} Butuh Bantuan`));
-    }
 
-    res.status(200).json({ message: "Sensor updated successfully" });
+const updateSensorRaspberry = async (req, res) => {
+  // socket ngetrigger krim data ke client(hp)
+  const dataEmergency = req.body.status;
+  try {
+    socket.broadcast
+      .to(user.branch_id)
+      .emit("dataEmergency", formatMessage(`${user.username} Butuh Bantuan`));
   } catch (error) {
     console.error(error);
     res
@@ -154,6 +176,7 @@ module.exports = {
   getSensorByToken,
   createSensor,
   updateSensor,
+  updateSensorRaspberry,
   deleteSensor,
   updateAllSensorTimes,
 };
