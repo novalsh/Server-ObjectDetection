@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const socketIO = require("socket.io");
 const { Server } = require("socket.io");
 const formatMessage = require("./utils/formatMessage");
 const UserRoute = require("./app/routes/Users");
@@ -14,6 +13,8 @@ const { userJoin } = require("./utils/users");
 const app = express();
 const server = require("http").Server(app);
 const io = new Server(server);
+
+module.exports = io;
 
 // bila dibutuhkan folder public untuk mengecek
 app.use(express.static("public"));

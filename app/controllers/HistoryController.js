@@ -10,9 +10,8 @@ const storage = multer.diskStorage({
         cb(null, Date.now() + '-' + file.originalname)
     }
 })
+
 const upload = multer({ storage: storage }).single('photo_url')
-
-
 
 const getHistorys = async (req, res) => {
     try {

@@ -1,7 +1,13 @@
 const formatMessage = require("../../utils/formatMessage");
 const Sensor = require("../models/Sensor");
-const { OP } = require("sequelize");
-const History = require("../models/History");
+// const io = require("../../index");
+
+const express = require("express");
+const { Server } = require("socket.io");
+
+const app = express();
+const server = require("http").Server(app);
+const io = new Server(server);
 
 const getSensor = async (req, res) => {
   try {
@@ -115,17 +121,27 @@ const updateSensor = async (req, res) => {
 
 
 const updateSensorRaspberry = async (req, res) => {
-  // socket ngetrigger krim data ke client(hp)
-  const dataEmergency = req.body.status;
-  try {
-    socket.broadcast
-      .to(user.branch_id)
-      .emit("dataEmergency", formatMessage(`${user.username} Butuh Bantuan`));
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while updating the sensor" });
+  const dataSensor = req.body;
+
+  if (dataSensor.conditional === 'active') {
+    try {
+      res.json("udah masuk bos");
+      console.log(dataSensor);
+      io.on("connection", socket => {
+        //join  with name and branch_id
+        socket.on("joinBranch", ({ branch_id }) => {
+          socket.join(branch_id);
+          socket.broadcast
+            .to(branch_id)
+            .emit("dataSensor", formatMessage(dataSensor));
+        });
+      }
+      );
+
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 };
 
