@@ -1,5 +1,7 @@
 const formatMessage = require("../../utils/formatMessage");
 const Sensor = require("../models/Sensor");
+const { OP } = require("sequelize");
+const History = require("../models/History");
 
 const getSensor = async (req, res) => {
   try {
@@ -79,12 +81,24 @@ const createSensor = async (req, res) => {
 };
 
 const updateSensor = async (req, res) => {
-  // socket ngetrigger krim data ke client(hp)
-  const dataEmergency = req.body.status;
+  const branchId = req.params.branchId;
   try {
-    socket.broadcast
-      .to(user.branch_id)
-      .emit("dataEmergency", formatMessage(`${user.username} Butuh Bantuan`));
+    // Ambil data terakhir dari tabel history untuk branch_id yang diberikan
+    const latestHistory = await History.findOne({
+      where: { branch_id: branchId },
+      order: [["timestamp", "DESC"]],
+    });
+
+    // Ambil nilai status terakhir dari data yang diperoleh
+    const dataEmergency = latestHistory.status;
+
+    if (dataEmergency) {
+      socket.broadcast
+        .to(branchId)
+        .emit("dataEmergency", formatMessage(`${user.username} Butuh Bantuan`));
+    }
+
+    res.status(200).json({ message: "Sensor updated successfully" });
   } catch (error) {
     console.error(error);
     res
