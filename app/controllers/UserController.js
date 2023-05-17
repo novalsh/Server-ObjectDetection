@@ -6,7 +6,11 @@ const {generateToken} = require("./AuthController");
 const getUser = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, {
+      attributes: {
+        exclude: ["password"],
+      },
+    });
     res.json(user);
   } catch (error) {
     console.log(error);
@@ -15,7 +19,11 @@ const getUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      attributes: {
+        exclude: ["password"],
+      },
+    });
     res.json(users);
   } catch (error) {
     console.log(error);
