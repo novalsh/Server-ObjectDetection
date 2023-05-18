@@ -12,12 +12,31 @@ const io = new Server(server);
 const getSensor = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Ambil data sensor berdasarkan ID
     const sensor = await Sensor.findByPk(id);
-    res.json(sensor);
+
+    if (!sensor) {
+      return res.status(404).json({ message: 'Sensor not found' });
+    }
+
+    // Hitung total sensor berdasarkan ID
+    const total = await Sensor.count({ where: { id } });
+
+    // Gabungkan data sensor dengan total sensor
+    const sensorWithTotal = {
+      ...sensor.toJSON(),
+      total,
+    };
+
+    res.json(sensorWithTotal);
   } catch (error) {
     console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
 
 const getSensors = async (req, res) => {
   try {

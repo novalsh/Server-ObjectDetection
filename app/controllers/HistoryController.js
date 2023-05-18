@@ -34,7 +34,7 @@ const getHistoryByToken = async (req, res) => {
     }
 }
 
-const createHistory = async (req, res, photo_url) => {
+const createHistory = async (req, res, photo_url) => { 
     try {
         const { name, description, date, user_id, branch_id } = req.body;
         const dataHistory = await History.create({
