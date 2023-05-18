@@ -1,17 +1,4 @@
 const History = require('../models/History');
-const multer = require('multer');
-const path = require('path');
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './storage/app/public/upload')
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname)
-    }
-})
-
-const upload = multer({ storage: storage }).single('photo_url')
 
 const getHistorys = async (req, res) => {
     try {
@@ -19,6 +6,7 @@ const getHistorys = async (req, res) => {
         res.json(dataHistorys);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'Terjadi kesalahan saat mengambil data.' });
     }
 }
 
@@ -29,6 +17,7 @@ const getHistory = async (req, res) => {
         res.json(dataHistory);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'Terjadi kesalahan saat mengambil data.' });
     }
 }
 
@@ -41,26 +30,27 @@ const getHistoryByToken = async (req, res) => {
         res.json(dataHistory);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'Terjadi kesalahan saat mengambil data.' });
     }
 }
 
-const createHistory = async (req, res) => {
+const createHistory = async (req, res, photo_url) => {
     try {
-      const { name, description, date, photo_url, user_id, branch_id } = req.body;
-      const dataHistory = await History.create({
-        name,
-        description,
-        date,
-        photo_url,
-        user_id,
-        branch_id,
-        status: 'aman' // status default adalah 'aman'
-      });
-      res.json(dataHistory);
+        const { name, description, date, user_id, branch_id } = req.body;
+        const dataHistory = await History.create({
+            name,
+            description,
+            date,
+            photo_url,
+            user_id,
+            branch_id,
+            status: 'aman' // status default adalah 'aman'
+        });
+        res.json(dataHistory);
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Terjadi kesalahan saat menyimpan data.' });
+        console.log(error);
+        res.status(500).json({ message: 'Terjadi kesalahan saat menyimpan data.' });
     }
 };
 
-module.exports = { getHistoryByToken, createHistory, upload, getHistorys, getHistory};
+module.exports = { getHistoryByToken, createHistory, getHistorys, getHistory };
