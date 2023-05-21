@@ -75,7 +75,7 @@ const updateUser = async (req, res) => {
     const newUser = await User.findByPk(id);
     const token = generateToken({ id: newUser.id, role: newUser.role, branch_id: newUser.branch_id });
 
-    res.json({ message: 'User berhasil diupdate', userUpdated, token })
+    res.json({ message: 'User berhasil diupdate', user: newUser, token: token })
   } catch (error) {
     res.status(500).json({ message: 'Terjadi kesalahan saat mengupdate user', error });
   }
