@@ -7,7 +7,7 @@ const UserRoute = require("./app/routes/Users");
 const BranchRoute = require("./app/routes/Branch");
 const HistoryRoute = require("./app/routes/History");
 const SensorRoute = require("./app/routes/Sensor");
-const AuthRoute = require("./app/routes/Auth");
+// const AuthRoute = require("./app/routes/Auth");
 const { userJoin } = require("./utils/users");
 
 const app = express();
@@ -22,7 +22,7 @@ app.use(express.static("public"));
 app.use(cors());
 app.use(express.json());
 
-app.use(AuthRoute);
+app.use(require("./app/routes/Auth"));
 app.use(UserRoute);
 app.use(BranchRoute);
 app.use(HistoryRoute);
