@@ -30,6 +30,18 @@ const getUsers = async (req, res) => {
   }
 };
 
+const getUserByToken = async (req, res) => {
+  try {
+    const loggedInAdminBranchId = req.user.branch_id;
+    const user = await User.findAll({
+      where: { branch_id: loggedInAdminBranchId },
+    });
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const createUser = async (req, res) => {
   try {
     const { name, email, password, role, status, condition, branch_id } = req.body;
