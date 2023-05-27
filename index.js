@@ -68,6 +68,6 @@ io.on("connection", socket => {
   socket.emit("pesan", formatMessage("ChatBot Admin", "Welcome to ChatCord"));
 });
 
-server.listen(3000, () => {
-  console.log("Server on port 3000");
+server.listen(83, () => {
+  console.log("Server on port 83");
 });
