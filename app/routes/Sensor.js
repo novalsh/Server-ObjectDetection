@@ -1,5 +1,5 @@
 const express = require('express');
-const { getSensors, getSensor, createSensor, getSensorByToken, updateSensor, updateSensorRaspberry, deleteSensor, updateAllSensorTimes } = require('../controllers/SensorController');
+const { getSensors, getSensor, createSensor, getSensorByToken, updateSensor, updateSensorRaspberry, deleteSensor, updateAllSensorTimes, createToSensor } = require('../controllers/SensorController');
 const { protect } = require('../controllers/AuthController');
 
 const router = express.Router();
@@ -12,5 +12,6 @@ router.delete('/api/sensor/:id', protect, deleteSensor);
 router.put('/api/times-sensor',protect, updateAllSensorTimes);
 router.get('/api/sensors/token', protect, getSensorByToken);
 router.post('/api/sensor-active', updateSensorRaspberry);
+router.post('/api/createToSensor', createToSensor);
 
 module.exports = router;

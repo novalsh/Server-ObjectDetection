@@ -17,7 +17,7 @@ const getSensor = async (req, res) => {
     const sensor = await Sensor.findByPk(id);
 
     if (!sensor) {
-      return res.status(404).json({ message: 'Sensor not found' });
+      return res.status(404).json({ message: "Sensor not found" });
     }
 
     // Hitung total sensor berdasarkan ID
@@ -32,11 +32,9 @@ const getSensor = async (req, res) => {
     res.json(sensorWithTotal);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
 
 const getSensors = async (req, res) => {
   try {
@@ -105,6 +103,47 @@ const createSensor = async (req, res) => {
   }
 };
 
+const createToSensor = async (req, res) => {
+  try {
+    const { id, branch_id, from_time, to_time, latitude, longitude, status } =
+      req.body;
+
+    if (
+      !id ||
+      !branch_id ||
+      !from_time ||
+      !to_time ||
+      !latitude ||
+      !longitude ||
+      !status
+    ) {
+      return res.status(400).json({
+        message: "Semua kolom harus diisi.",
+      });
+    }
+
+    // Cek apakah sensor dengan ID yang diberikan sudah ada
+    const existingSensor = await Sensor.findByPk(id);
+
+    if (existingSensor) {
+      // Jika ada, panggil fungsi updateSensor untuk memperbarui sensor
+      await updateSensor(req, res);
+      return;
+    }
+
+    // Jika tidak ada, kembalikan pesan bahwa ID tidak ditemukan
+    return res.status(404).json({
+      message: "ID tidak ditemukan.",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Terjadi kesalahan saat membuat sensor.",
+      error: error.message,
+    });
+  }
+};
+
 const updateSensor = async (req, res) => {
   try {
     const { id } = req.params;
@@ -138,15 +177,14 @@ const updateSensor = async (req, res) => {
   }
 };
 
-
 const updateSensorRaspberry = async (req, res) => {
   const dataSensor = req.body;
 
-  if (dataSensor.conditional === 'active') {
+  if (dataSensor.conditional === "active") {
     try {
       res.json("udah masuk bos");
       console.log(dataSensor);
-      io.on("connection", socket => {
+      io.on("connection", (socket) => {
         //join  with name and branch_id
         socket.on("joinBranch", ({ branch_id }) => {
           socket.join(branch_id);
@@ -154,13 +192,10 @@ const updateSensorRaspberry = async (req, res) => {
             .to(branch_id)
             .emit("dataSensor", formatMessage(dataSensor));
         });
-      }
-      );
-
+      });
     } catch (error) {
       console.log(error);
     }
-
   }
 };
 
@@ -210,6 +245,7 @@ module.exports = {
   getSensors,
   getSensorByToken,
   createSensor,
+  createToSensor,
   updateSensor,
   updateSensorRaspberry,
   deleteSensor,
