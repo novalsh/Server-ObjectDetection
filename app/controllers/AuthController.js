@@ -10,12 +10,13 @@ const login = async (req, res) => {
   try {
     const user = await User.findOne({ where: { email } });
 
-    const { id, name, role, status, condition, branch_id } = user;
-    const modifiedUser = { id, name, email, role, status, condition, branch_id };
-
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+    
+    const { id, name, role, status, condition, branch_id } = user;
+    const modifiedUser = { id, name, email, role, status, condition, branch_id };
+
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 

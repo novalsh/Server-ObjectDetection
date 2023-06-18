@@ -2,6 +2,7 @@ const { error } = require("console");
 const User = require("../models/Users");
 const bcrypt = require("bcrypt");
 const {generateToken} = require("./AuthController");
+const Branch = require("../models/Branch");
 
 const testAPI = async (req, res) => {
   const userData = await User.findAll();
@@ -51,6 +52,43 @@ const createUser = async (req, res) => {
   try {
     const { name, email, password, role, status, condition, branch_id } = req.body;
     const passwordBcrypt = await bcrypt.hash(password, 10);
+
+    // validation
+    // check email is valid
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: 'Email tidak valid' });
+    }
+
+    // check email is unique
+    const emailExist = await User.findOne({ where: { email } });
+    if (emailExist) {
+      return res.status(400).json({ message: 'Email sudah terdaftar' });
+    }
+
+    // check if status is active | non-active
+    const statusRegex = /active|non-active/;
+    if (!statusRegex.test(status)) {
+      return res.status(400).json({ message: 'Status tidak valid' });
+    }
+
+    // check if condition is none | emergency
+    const conditionRegex = /none|emergency/;
+    if (!conditionRegex.test(condition)) {
+      return res.status(400).json({ message: 'Kondisi tidak valid' });
+    }
+
+    // check role is superadmin | admin | security
+    const roleRegex = /superadmin|admin|security/;
+    if (!roleRegex.test(role)) {
+      return res.status(400).json({ message: 'Role tidak valid' });
+    }
+
+    // check branch is valid
+    const branch = await Branch.findByPk(branch_id);
+    if (!branch) {
+      return res.status(404).json({ message: 'Branch tidak ditemukan' });
+    }
 
     const user = await User.create({
       name,
