@@ -180,24 +180,32 @@ const updateSensor = async (req, res) => {
 const updateSensorRaspberry = async (req, res) => {
   const dataSensor = req.body;
 
-  if (dataSensor.conditional === "active") {
-    try {
-      res.json("masuk");
-      console.log(dataSensor);
-      io.on("connection", (socket) => {
-        //join  with name and branch_id
-        socket.on("joinBranch", ({ branch_id }) => {
-          socket.join(branch_id);
-          socket.broadcast
-            .to(branch_id)
-            .emit("dataSensor", formatMessage(dataSensor));
-        });
+  // Validasi data yang dikirim
+  if (!dataSensor || typeof dataSensor !== 'object' || Object.keys(dataSensor).length === 0) {
+    return res.status(400).json({ message: 'Invalid data' });
+  }
+
+  if (!dataSensor.conditional || dataSensor.conditional !== 'active') {
+    return res.status(400).json({ message: 'Invalid conditional value' });
+  }
+
+  try {
+    // Proses update sensor jika kondisi aktif
+    res.json({ message: 'success' });
+    console.log(dataSensor);
+    io.on('connection', (socket) => {
+      //join with name and branch_id
+      socket.on('joinBranch', ({ branch_id }) => {
+        socket.join(branch_id);
+        socket.broadcast.to(branch_id).emit('dataSensor', formatMessage(dataSensor));
       });
-    } catch (error) {
-      console.log(error);
-    }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 const deleteSensor = async (req, res) => {
   try {
