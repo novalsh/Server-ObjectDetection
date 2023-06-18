@@ -3,6 +3,11 @@ const User = require("../models/Users");
 const bcrypt = require("bcrypt");
 const {generateToken} = require("./AuthController");
 
+const testAPI = async (req, res) => {
+  const userData = await User.findAll();
+  res.json(userData);
+};
+
 const getUser = async (req, res) => {
   const { id } = req.params;
   try {

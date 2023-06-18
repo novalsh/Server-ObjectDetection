@@ -1,8 +1,35 @@
 const History = require('../models/History');
+const multer = require('multer');
+const path = require('path');
+const User = require('../models/Users');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './storage/app/public/upload')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
+
+const upload = multer({ storage: storage }).single('photo_url')
 
 const getHistorys = async (req, res) => {
     try {
-        const dataHistorys = await History.findAll();
+        const dataHistorys = await History.findAll(
+            // get detail users
+            {
+                include: [
+                    {
+                        model: User,
+                        as: 'user',
+                        attributes: {
+                            exclude: ['password']
+                        }
+                    },
+                ],
+            }
+        );
         res.json(dataHistorys);
     } catch (error) {
         console.log(error);

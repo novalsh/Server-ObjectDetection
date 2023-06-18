@@ -182,7 +182,7 @@ const updateSensorRaspberry = async (req, res) => {
 
   if (dataSensor.conditional === "active") {
     try {
-      res.json("udah masuk bos");
+      res.json("masuk");
       console.log(dataSensor);
       io.on("connection", (socket) => {
         //join  with name and branch_id
