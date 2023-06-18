@@ -2,7 +2,13 @@ const User = require("../models/Users");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("./AuthController");
 const Branch = require("../models/Branch");
-const { successResponse, errorResponse } = require("../helper/response");
+const { successResponse, errorResponse } = require("../helper/responseUser");
+const {
+  validateEmail,
+  validateStatus,
+  validateCondition,
+  validateRole,
+} = require("../helper/responseUser");
 
 const testAPI = async (req, res) => {
   const userData = await User.findAll();
@@ -54,7 +60,7 @@ const createUser = async (req, res) => {
       req.body;
     const passwordBcrypt = await bcrypt.hash(password, 10);
 
-    // validation
+    // Validation
     if (!validateEmail(email)) {
       return errorResponse(res, "Email tidak valid", 400);
     }
@@ -99,7 +105,8 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, password, role, status, condition, branch_id } = req.body;
+    const { name, email, password, role, status, condition, branch_id } =
+      req.body;
     const user = await User.findByPk(id);
 
     if (!user) {
@@ -164,7 +171,6 @@ const updateUser = async (req, res) => {
     return errorResponse(res, "Terjadi kesalahan saat mengupdate user", 500);
   }
 };
-
 
 const deleteUser = async (req, res) => {
   try {
