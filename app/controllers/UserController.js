@@ -1,8 +1,8 @@
-const { error } = require("console");
 const User = require("../models/Users");
 const bcrypt = require("bcrypt");
-const {generateToken} = require("./AuthController");
+const { generateToken } = require("./AuthController");
 const Branch = require("../models/Branch");
+const { successResponse, errorResponse } = require("../helper/response");
 
 const testAPI = async (req, res) => {
   const userData = await User.findAll();
@@ -50,44 +50,35 @@ const getUserByToken = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { name, email, password, role, status, condition, branch_id } = req.body;
+    const { name, email, password, role, status, condition, branch_id } =
+      req.body;
     const passwordBcrypt = await bcrypt.hash(password, 10);
 
     // validation
-    // check email is valid
-    const emailRegex = /\S+@\S+\.\S+/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: 'Email tidak valid' });
+    if (!validateEmail(email)) {
+      return errorResponse(res, "Email tidak valid", 400);
     }
 
-    // check email is unique
     const emailExist = await User.findOne({ where: { email } });
     if (emailExist) {
-      return res.status(400).json({ message: 'Email sudah terdaftar' });
+      return errorResponse(res, "Email sudah terdaftar", 400);
     }
 
-    // check if status is active | non-active
-    const statusRegex = /active|non-active/;
-    if (!statusRegex.test(status)) {
-      return res.status(400).json({ message: 'Status tidak valid' });
+    if (!validateStatus(status)) {
+      return errorResponse(res, "Status tidak valid", 400);
     }
 
-    // check if condition is none | emergency
-    const conditionRegex = /none|emergency/;
-    if (!conditionRegex.test(condition)) {
-      return res.status(400).json({ message: 'Kondisi tidak valid' });
+    if (!validateCondition(condition)) {
+      return errorResponse(res, "Kondisi tidak valid", 400);
     }
 
-    // check role is superadmin | admin | security
-    const roleRegex = /superadmin|admin|security/;
-    if (!roleRegex.test(role)) {
-      return res.status(400).json({ message: 'Role tidak valid' });
+    if (!validateRole(role)) {
+      return errorResponse(res, "Role tidak valid", 400);
     }
 
-    // check branch is valid
     const branch = await Branch.findByPk(branch_id);
     if (!branch) {
-      return res.status(404).json({ message: 'Branch tidak ditemukan' });
+      return errorResponse(res, "Branch tidak ditemukan", 404);
     }
 
     const user = await User.create({
@@ -108,33 +99,72 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, email, password, role, status, condition, branch_id } = req.body;
     const user = await User.findByPk(id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User tidak ditemukan' });
+      return errorResponse(res, "User tidak ditemukan", 404);
+    }
+
+    if (email && !validateEmail(email)) {
+      return errorResponse(res, "Email tidak valid", 400);
+    }
+
+    if (email && email !== user.email) {
+      const emailExist = await User.findOne({ where: { email } });
+      if (emailExist) {
+        return errorResponse(res, "Email sudah terdaftar", 400);
+      }
+    }
+
+    if (status && !validateStatus(status)) {
+      return errorResponse(res, "Status tidak valid", 400);
+    }
+
+    if (condition && !validateCondition(condition)) {
+      return errorResponse(res, "Kondisi tidak valid", 400);
+    }
+
+    if (role && !validateRole(role)) {
+      return errorResponse(res, "Role tidak valid", 400);
+    }
+
+    if (branch_id) {
+      const branch = await Branch.findByPk(branch_id);
+      if (!branch) {
+        return errorResponse(res, "Branch tidak ditemukan", 404);
+      }
     }
 
     const updatedData = {
       name: name || user.name, // menggunakan nilai asli jika tidak ada pada req.body
-      email: req.body.email || user.email,
-      password: req.body.password || user.password,
-      role: req.body.role || user.role,
-      status: req.body.status || user.status,
-      condition: req.body.condition || user.condition,
-      branch_id: req.body.branch_id || user.branch_id,
+      email: email || user.email,
+      password: password || user.password,
+      role: role || user.role,
+      status: status || user.status,
+      condition: condition || user.condition,
+      branch_id: branch_id || user.branch_id,
     };
 
     const userUpdated = await User.update(updatedData, { where: { id } });
 
     const newUser = await User.findByPk(id);
-    const token = generateToken({ id: newUser.id, role: newUser.role, branch_id: newUser.branch_id });
+    const token = generateToken({
+      id: newUser.id,
+      role: newUser.role,
+      branch_id: newUser.branch_id,
+    });
 
-    res.json({ message: 'User berhasil diupdate', user: newUser, token: token })
+    res.json({
+      message: "User berhasil diupdate",
+      user: newUser,
+      token: token,
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Terjadi kesalahan saat mengupdate user', error });
+    return errorResponse(res, "Terjadi kesalahan saat mengupdate user", 500);
   }
 };
+
 
 const deleteUser = async (req, res) => {
   try {
@@ -148,4 +178,11 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUser, getUsers, createUser, updateUser, deleteUser, getUserByToken };
+module.exports = {
+  getUser,
+  getUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+  getUserByToken,
+};
