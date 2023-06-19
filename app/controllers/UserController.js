@@ -2,13 +2,12 @@ const User = require("../models/Users");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("./AuthController");
 const Branch = require("../models/Branch");
-const { successResponse, errorResponse } = require("../helper/responseUser");
 const {
   validateEmail,
   validateStatus,
   validateCondition,
   validateRole,
-} = require("../helper/responseUser");
+} = require("../../helper/responseUser");
 
 const testAPI = async (req, res) => {
   const userData = await User.findAll();
