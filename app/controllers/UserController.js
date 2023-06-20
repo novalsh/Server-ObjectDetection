@@ -7,6 +7,7 @@ const {
   validateStatus,
   validateCondition,
   validateRole,
+  errorResponse,
 } = require("../../helper/responseUser");
 
 const testAPI = async (req, res) => {
@@ -153,18 +154,11 @@ const updateUser = async (req, res) => {
     };
 
     const userUpdated = await User.update(updatedData, { where: { id } });
-
     const newUser = await User.findByPk(id);
-    const token = generateToken({
-      id: newUser.id,
-      role: newUser.role,
-      branch_id: newUser.branch_id,
-    });
 
     res.json({
-      message: "User berhasil diupdate",
+      message: "User updated successfully.",
       user: newUser,
-      token: token,
     });
   } catch (error) {
     return errorResponse(res, "Terjadi kesalahan saat mengupdate user", 500);
@@ -177,7 +171,9 @@ const deleteUser = async (req, res) => {
     const user = await User.destroy({
       where: { id },
     });
-    res.json(user);
+    res.json({
+      message: "User deleted successfully.",
+    });
   } catch (error) {
     console.log(error);
   }

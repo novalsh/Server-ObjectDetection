@@ -30,7 +30,7 @@ const sequelize = require('../../config/database');
       allowNull: true
     },
     status: {
-      type: DataTypes.ENUM('emergency', 'aman'),
+      type: DataTypes.ENUM('none', 'emergency'),
       allowNull: false
     },
     date: {

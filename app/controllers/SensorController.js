@@ -13,23 +13,31 @@ const getSensor = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Ambil data sensor berdasarkan ID
+    // Ambil data sensor berdasarkan ID/Branch Id
     const sensor = await Sensor.findByPk(id);
-
     if (!sensor) {
       return res.status(404).json({ message: "Sensor not found" });
     }
+    return res.json(sensor);
 
-    // Hitung total sensor berdasarkan ID
-    const total = await Sensor.count({ where: { id } });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+const getSensorByBranchId = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-    // Gabungkan data sensor dengan total sensor
-    const sensorWithTotal = {
-      ...sensor.toJSON(),
-      total,
-    };
+    // Ambil data sensor berdasarkan Branch Id
+    const sensor = await Sensor.findAll({
+      where: { branch_id: id },
+    });
+    if (!sensor) {
+      return res.status(404).json({ message: "Sensor not found" });
+    }
+    return res.json(sensor);
 
-    res.json(sensorWithTotal);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
@@ -60,40 +68,48 @@ const getSensorByToken = async (req, res) => {
 const createSensor = async (req, res) => {
   try {
     const {
+      code,
       branch_id,
-      from_time,
-      to_time,
       latitude,
       longitude,
-      status,
-      conditional,
+      isOn,
     } = req.body;
 
     if (
+      !code ||
       !branch_id ||
-      !from_time ||
-      !to_time ||
       !latitude ||
       !longitude ||
-      !status ||
-      !conditional
+      !isOn
     ) {
       return res.status(400).json({
-        message: "All fields are required.",
+        message: "Code, Branch Id, Latitude, and Logitude fields are required.",
+      });
+    }
+
+    // check code sensor is exist
+    const existingSensor = await Sensor.findOne({
+      where: { code },
+    });
+
+    if (existingSensor) {
+      return res.status(400).json({
+        message: "Code sensor already exist.",
       });
     }
 
     const sensor = await Sensor.create({
+      code,
       branch_id,
-      from_time,
-      to_time,
       latitude,
       longitude,
-      status,
-      conditional,
+      isOn,
     });
 
-    res.status(201).json(sensor);
+    res.status(201).json({
+      message: "Sensor created successfully.",
+      data: sensor,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -103,95 +119,79 @@ const createSensor = async (req, res) => {
   }
 };
 
-const createToSensor = async (req, res) => {
-  try {
-    const { id, branch_id, from_time, to_time, latitude, longitude, status } =
-      req.body;
-
-    if (
-      !id ||
-      !branch_id ||
-      !from_time ||
-      !to_time ||
-      !latitude ||
-      !longitude ||
-      !status
-    ) {
-      return res.status(400).json({
-        message: "Semua kolom harus diisi.",
-      });
-    }
-
-    // Cek apakah sensor dengan ID yang diberikan sudah ada
-    const existingSensor = await Sensor.findByPk(id);
-
-    if (existingSensor) {
-      // Jika ada, panggil fungsi updateSensor untuk memperbarui sensor
-      await updateSensor(req, res);
-      return;
-    }
-
-    // Jika tidak ada, kembalikan pesan bahwa ID tidak ditemukan
-    return res.status(404).json({
-      message: "ID tidak ditemukan.",
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Terjadi kesalahan saat membuat sensor.",
-      error: error.message,
-    });
-  }
-};
-
 const updateSensor = async (req, res) => {
   try {
     const { id } = req.params;
     const {
+      code,
       branch_id,
-      from_time,
-      to_time,
       latitude,
       longitude,
-      status,
-      conditional,
+      isOn,
     } = req.body;
 
-    const sensor = await Sensor.update(
+    // Cek apakah sensor dengan ID yang diberikan ada
+    const sensor = await Sensor.findByPk(id);
+    if (!sensor) {
+      return res.status(404).json({ message: "Sensor not found" });
+    }
+
+    // Cek apakah code sensor yang diberikan sudah ada
+    const existingSensor = await Sensor.findOne({
+      where: { code },
+    });
+
+    if (existingSensor && existingSensor.id !== Number(id)) {
+      return res.status(400).json({
+        message: "Code sensor already exist.",
+      });
+    }
+    const sensorUpdate = await Sensor.update(
       {
+        code,
         branch_id,
-        from_time,
-        to_time,
         latitude,
         longitude,
-        status,
-        conditional,
+        isOn,
       },
       {
         where: { id },
       }
     );
-    res.json(sensor);
+    res.status(200).json({
+      message: 'Sensor updated successfully.',
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
 const updateSensorRaspberry = async (req, res) => {
-  const dataSensor = req.body;
+  const { code, branch_id, latitude, longitude, isDetected } = req.body;
 
-  // Validasi data yang dikirim
-  if (!dataSensor || typeof dataSensor !== 'object' || Object.keys(dataSensor).length === 0) {
-    return res.status(400).json({ message: 'Invalid data' });
-  }
-
-  if (!dataSensor.conditional || dataSensor.conditional !== 'active') {
-    return res.status(400).json({ message: 'Invalid conditional value' });
+  // check id sensor in current branch
+  const sensor = await Sensor.findOne({
+    where: { code, branch_id },
+  });
+  if (!sensor) {
+    return res.status(404).json({ message: "Sensor not found" });
   }
 
   try {
-    // Proses update sensor jika kondisi aktif
-    res.json({ message: 'success' });
+    // save data sensor
+    const dataSensor = await Sensor.update(
+      {
+        latitude,
+        longitude,
+        isDetected,
+      },
+      {
+        where: { code, branch_id },
+      }
+    );
+    res.json({
+      message: "Sensor updated successfully"
+    });
     console.log(dataSensor);
     io.on('connection', (socket) => {
       //join with name and branch_id
@@ -213,49 +213,52 @@ const deleteSensor = async (req, res) => {
     const sensor = await Sensor.destroy({
       where: { id },
     });
-    res.json(sensor);
+    res.json({
+      message: 'Sensor deleted successfully.',
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
-const updateAllSensorTimes = async (req, res) => {
-  try {
-    const { from_time, to_time } = req.body;
-    const loggedInAdminBranchId = req.user.branch_id;
-    console.log(req.user);
+// const updateAllSensorTimes = async (req, res) => {
+//   try {
+//     const { from_time, to_time } = req.body;
+//     const loggedInAdminBranchId = req.user.branch_id;
+//     console.log(req.user);
 
-    const [affectedRows] = await Sensor.update(
-      {
-        from_time,
-        to_time,
-      },
-      {
-        where: { branch_id: loggedInAdminBranchId },
-      }
-    );
+//     const [affectedRows] = await Sensor.update(
+//       {
+//         from_time,
+//         to_time,
+//       },
+//       {
+//         where: { branch_id: loggedInAdminBranchId },
+//       }
+//     );
 
-    res.json({
-      message: `Updated ${affectedRows} sensor(s)`,
-      from_time,
-      to_time,
-    });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while updating the sensors" });
-  }
-};
+//     res.json({
+//       message: `Updated ${affectedRows} sensor(s)`,
+//       from_time,
+//       to_time,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res
+//       .status(500)
+//       .json({ message: "An error occurred while updating the sensors" });
+//   }
+// };
 
 module.exports = {
   getSensor,
   getSensors,
   getSensorByToken,
   createSensor,
-  createToSensor,
+  // createToSensor,
   updateSensor,
   updateSensorRaspberry,
   deleteSensor,
-  updateAllSensorTimes,
+  getSensorByBranchId
+  // updateAllSensorTimes,
 };

@@ -26,11 +26,12 @@ module.exports = {
         allowNull: false
       },
       status: {
-        type: Sequelize.ENUM('active', 'non-active'),
+        type: Sequelize.ENUM('active', 'inactive'),
         allowNull: false
       },
       condition: {
         type: Sequelize.ENUM('none', 'emergency'),
+        defaultValue: 'none',
         allowNull: false
       },
       branch_id: {

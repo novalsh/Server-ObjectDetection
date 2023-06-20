@@ -13,6 +13,10 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
+    if(user.role === 'security'){
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
     
     const { id, name, role, status, condition, branch_id } = user;
     const modifiedUser = { id, name, email, role, status, condition, branch_id };

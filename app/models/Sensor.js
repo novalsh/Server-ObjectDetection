@@ -16,16 +16,13 @@ const sequelize = require('../../config/database');
       autoIncrement: true,
       allowNull: false
     },
+    code: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
     branch_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    from_time: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    to_time: {
-      type: DataTypes.DATE,
       allowNull: false
     },
     latitude: {
@@ -36,13 +33,15 @@ const sequelize = require('../../config/database');
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    status: {
-      type: DataTypes.ENUM('active', 'non-active'),
-      allowNull: false
+    isOn : {
+      type : DataTypes.ENUM('on','off'),
+      allowNull : false,
+      defaultValue : 'on'
     },
-    conditional: {
-      type: DataTypes.ENUM('active', 'non-active'),
-      allowNull: false
+    isDetected: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
     createdAt: {
       allowNull: false,

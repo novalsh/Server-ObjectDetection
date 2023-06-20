@@ -34,11 +34,12 @@ const sequelize = require('../../config/database');
       allowNull: false
     },
     status: {
-      type: DataTypes.ENUM('active', 'non-active'),
+      type: DataTypes.ENUM('active', 'inactive'),
       allowNull: false
     },
     condition: {
       type: DataTypes.ENUM('none', 'emergency'),
+      defaultValue: 'none',
       allowNull: false
     },
     branch_id: {

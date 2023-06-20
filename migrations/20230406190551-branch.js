@@ -13,9 +13,17 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      location: {
+      city: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      from_active_time: {
+        type: Sequelize.TIME,
+        allowNull: false
+      },
+      to_active_time: {
+        type: Sequelize.TIME,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

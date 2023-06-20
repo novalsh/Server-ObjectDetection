@@ -9,6 +9,12 @@ module.exports = {
         autoIncrement: true,
         allowNull: false
       },
+      code: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        indexedDB: true,
+        unique: true
+      },
       branch_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -16,14 +22,6 @@ module.exports = {
           model: 'Branch',
           key: 'id'
         },
-      },
-      from_time : {
-        type : Sequelize.DATE,
-        allowNull : false
-      },
-      to_time : {
-        type : Sequelize.DATE,
-        allowNull : false
       },
       latitude : {
         type : Sequelize.INTEGER,
@@ -33,13 +31,15 @@ module.exports = {
         type : Sequelize.INTEGER,
         allowNull : false
       },
-      status : {
-        type : Sequelize.ENUM('active','non-active'),
-        allowNull : false
+      isOn : {
+        type : Sequelize.ENUM('on','off'),
+        allowNull : false,
+        defaultValue : 'on'
       },
-      conditional : {
-        type : Sequelize.ENUM('active','non-active'),
-        allowNull : false
+      isDetected: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,

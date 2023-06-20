@@ -28,7 +28,7 @@ module.exports = {
         allowNull: true
       },
       status: {
-        type: Sequelize.ENUM('emergency', 'aman'),
+        type: Sequelize.ENUM('none', 'emergency'),
         allowNull: false
       },
       date: {

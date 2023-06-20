@@ -22,8 +22,16 @@ Branch.init({
         type: DataTypes.STRING,
         allowNull: false
     },
-    location: {
+    city: {
         type: DataTypes.STRING,
+        allowNull: false
+    },
+    from_active_time: {
+        type: DataTypes.TIME,
+        allowNull: false
+    },
+    to_active_time: {
+        type: DataTypes.TIME,
         allowNull: false
     },
     createdAt: {

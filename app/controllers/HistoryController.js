@@ -71,7 +71,7 @@ const createHistory = async (req, res, photo_url) => {
             photo_url,
             user_id,
             branch_id,
-            status: 'aman' // status default adalah 'aman'
+            status: 'none' // status default adalah 'aman'
         });
         res.json(dataHistory);
     } catch (error) {

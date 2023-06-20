@@ -4,7 +4,7 @@ const validateEmail = (email) => {
   };
   
   const validateStatus = (status) => {
-    const statusRegex = /active|non-active/;
+    const statusRegex = /active|inactive/;
     return statusRegex.test(status);
   };
   
@@ -22,6 +22,13 @@ const validateEmail = (email) => {
     const branch = await Branch.findByPk(branchId);
     return !!branch;
   };
+
+  const errorResponse = (res, message, statusCode) => {
+    return res.status(statusCode).json({
+      status: "error",
+      message,
+    });
+  };
   
   module.exports = {
     validateEmail,
@@ -29,5 +36,6 @@ const validateEmail = (email) => {
     validateCondition,
     validateRole,
     validateBranch,
+    errorResponse,
   };
   
