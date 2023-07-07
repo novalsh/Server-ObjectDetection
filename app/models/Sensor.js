@@ -34,7 +34,7 @@ const sequelize = require('../../config/database');
       allowNull: false
     },
     isOn : {
-      type : DataTypes.ENUM('on','off'),
+      type : DataTypes.BOOLEAN,
       allowNull : false,
       defaultValue : 'on'
     },

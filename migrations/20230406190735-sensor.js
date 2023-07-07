@@ -32,9 +32,9 @@ module.exports = {
         allowNull : false
       },
       isOn : {
-        type : Sequelize.ENUM('on','off'),
+        type : Sequelize.BOOLEAN,
         allowNull : false,
-        defaultValue : 'on'
+        defaultValue : false
       },
       isDetected: {
         type: Sequelize.BOOLEAN,
