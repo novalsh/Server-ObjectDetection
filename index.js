@@ -11,10 +11,6 @@ const AuthRoute = require("./app/routes/AuthRoutes");
 const { userJoin } = require("./utils/users");
 
 const app = express();
-const server = require("http").Server(app);
-const io = new Server(server);
-
-module.exports = io;
 
 // bila dibutuhkan folder public untuk mengecek
 app.use(express.static("public"));
@@ -28,46 +24,18 @@ app.use(BranchRoute);
 app.use(HistoryRoute);
 app.use(SensorRoute);
 
-io.on("connection", socket => {
-
-  //join  with name and branch_id
-  socket.on("joinBranch", ({ username, branch_id }) => {
-    const user = userJoin(socket.id, username, branch_id);
-
-    console.log(user);
-
-    socket.join(user.branch_id);
-
-    socket.on("kirim-pesan", pesan => {
-      console.log(pesan)
-      socket.broadcast.to(user.branch_id).emit("pesan-baru", pesan)
-      // disini
-    });
-
-    io.to(user.branch_id).emit(
-      "pesan",
-      "Selamat Datang di " + user.branch_id
-    );
-
-    socket.broadcast
-      .to(user.branch_id)
-      .emit(
-        "pesan",
-        formatMessage("ChatBot Admin", `${user.username} has joined the chat`)
-      );
-
-    // Runs when client disconnects
-    socket.on("disconnect", () => {
-      io.emit(
-        "pesan",
-        formatMessage("ChatBot Admin", `${user.username} has left the chat`)
-      );
-    });
-  });
-
-  socket.emit("pesan", formatMessage("ChatBot Admin", "Welcome to ChatCord"));
+const server = app.listen(83, () => {
+  console.log("Server on port 83");
 });
 
-server.listen(83, () => {
-  console.log("Server on port 83");
+
+const io = require("socket.io")(server);
+
+io.on("connection", (socket) => {
+  console.log("New WS Connection...");
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+
 });
