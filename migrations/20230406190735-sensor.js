@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("sensor", {
+    await queryInterface.createTable('sensor', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -23,18 +23,18 @@ module.exports = {
           key: 'id'
         },
       },
-      latitude : {
-        type : Sequelize.INTEGER,
-        allowNull : false
+      latitude: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
       },
-      longitude : {
-        type : Sequelize.INTEGER,
-        allowNull : false
+      longitude: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
       },
-      isOn : {
-        type : Sequelize.BOOLEAN,
-        allowNull : false,
-        defaultValue : false
+      isOn: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       },
       isDetected: {
         type: Sequelize.BOOLEAN,
@@ -57,6 +57,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("sensor");
+    await queryInterface.dropTable('sensor');
   },
 };

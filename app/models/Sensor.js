@@ -26,13 +26,13 @@ const sequelize = require('../../config/database');
       allowNull: false
     },
     latitude: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DOUBLE,
       allowNull: false
     },
     longitude: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DOUBLE,
       allowNull: false
-    },
+    },    
     isOn : {
       type : DataTypes.BOOLEAN,
       allowNull : false,
