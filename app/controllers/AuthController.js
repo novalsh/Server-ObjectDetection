@@ -21,7 +21,6 @@ const login = async (req, res) => {
     const { id, name, role, status, condition, branch_id } = user;
     const modifiedUser = { id, name, email, role, status, condition, branch_id };
 
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {

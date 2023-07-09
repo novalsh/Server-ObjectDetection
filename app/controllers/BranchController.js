@@ -67,11 +67,9 @@ const createBranch = async (req, res) => {
 const updateBranch = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, city, from_active_time, to_active_time } = req.body;
+    const { from_active_time, to_active_time } = req.body;
     const branch = await Branch.update(
       {
-        name,
-        city,
         from_active_time,
         to_active_time,
       },

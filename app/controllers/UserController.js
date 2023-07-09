@@ -2,6 +2,8 @@ const User = require("../models/Users");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("./AuthController");
 const Branch = require("../models/Branch");
+const jwt = require('jsonwebtoken');
+
 const {
   validateEmail,
   validateStatus,
@@ -9,6 +11,8 @@ const {
   validateRole,
   errorResponse,
 } = require("../../helper/responseUser");
+
+const jwtSecret = process.env.JWT_SECRET;
 
 const testAPI = async (req, res) => {
   const userData = await User.findAll();
@@ -156,12 +160,17 @@ const updateUser = async (req, res) => {
     const userUpdated = await User.update(updatedData, { where: { id } });
     const newUser = await User.findByPk(id);
 
+    const token = jwt.sign({ id: user.id, role: newUser.role, branch_id: newUser.branch_id }, jwtSecret, {
+      expiresIn: '1h',
+    });
+
     res.json({
       message: "User updated successfully.",
+      token,
       user: newUser,
     });
   } catch (error) {
-    return errorResponse(res, "Terjadi kesalahan saat mengupdate user", 500);
+    return errorResponse(res, `${error}`, 500);
   }
 };
 
