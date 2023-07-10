@@ -34,6 +34,10 @@ router.post(
   (req, res) => {
     let finalImageURL =
       req.protocol + "://" + req.get("host") + "/uploads/" + req.file.filename;
+    
+    // Mengganti "http://" dengan "https://"
+    finalImageURL = finalImageURL.replace("http://", "https://");
+    
     createHistory(req, res, finalImageURL);
   }
 );
