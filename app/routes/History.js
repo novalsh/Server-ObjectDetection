@@ -39,6 +39,7 @@ router.post(
     finalImageURL = finalImageURL.replace("http://", "https://");
     
     createHistory(req, res, finalImageURL);
+    
   }
 );
 router.get("/api/historys/token", protect, getHistoryByToken);
