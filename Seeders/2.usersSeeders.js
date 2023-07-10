@@ -12,8 +12,6 @@ module.exports = {
         email: 'admin@example.com',
         password: passwordHash,
         role: 'admin',
-        status: 'active',
-        condition: 'none',
         branch_id: 1,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -23,8 +21,6 @@ module.exports = {
         email: 'superadmin@example.com',
         password: passwordHash,
         role: 'superadmin',
-        status: 'active',
-        condition: 'none',
         branch_id: 2,
         createdAt: new Date(),
         updatedAt: new Date()

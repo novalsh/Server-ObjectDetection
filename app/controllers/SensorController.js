@@ -80,7 +80,7 @@ const createSensor = async (req, res) => {
       !branch_id ||
       !latitude ||
       !longitude ||
-      !isOn
+      isOn === undefined
     ) {
       return res.status(400).json({
         message: "Code, Branch Id, Latitude, and Logitude fields are required.",

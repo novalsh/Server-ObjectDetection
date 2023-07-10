@@ -30,16 +30,7 @@ const sequelize = require('../../config/database');
       allowNull: false
     },
     role: {
-      type: DataTypes.ENUM('superadmin', 'admin', 'user','security'),
-      allowNull: false
-    },
-    status: {
-      type: DataTypes.ENUM('active', 'inactive'),
-      allowNull: false
-    },
-    condition: {
-      type: DataTypes.ENUM('none', 'emergency'),
-      defaultValue: 'none',
+      type: DataTypes.ENUM('superadmin', 'admin','security'),
       allowNull: false
     },
     branch_id: {

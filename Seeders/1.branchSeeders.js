@@ -4,7 +4,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('branch', [
       {
-        name: 'Malang',
+        name: 'BINUS @Malang',
         city: 'Malang',
         from_active_time: '09:00:00',
         to_active_time: '17:00:00',
@@ -12,7 +12,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        name: 'Kemanggisan',
+        name: 'BINUS @Kemanggisan',
         city: 'Kemanggisan',
         from_active_time: '08:30:00',
         to_active_time: '16:30:00',

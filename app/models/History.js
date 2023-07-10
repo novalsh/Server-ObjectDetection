@@ -7,6 +7,7 @@ const sequelize = require('../../config/database');
     static associate(models) {
       History.belongsTo(models.User, { foreignKey: 'user_id' });
       History.belongsTo(models.Branch, { foreignKey: 'branch_id' });
+      History.belongsTo(models.Sensor, { foreignKey: 'sensor_id' });
     }
   };
   
@@ -17,8 +18,8 @@ const sequelize = require('../../config/database');
       autoIncrement: true,
       allowNull: false
     },
-    name: {
-      type: DataTypes.STRING,
+    sensor_id: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     user_id: {
@@ -29,8 +30,8 @@ const sequelize = require('../../config/database');
       type: DataTypes.STRING,
       allowNull: true
     },
-    status: {
-      type: DataTypes.ENUM('none', 'emergency'),
+    isEmergency: {
+      type: DataTypes.BOOLEAN,
       allowNull: false
     },
     date: {

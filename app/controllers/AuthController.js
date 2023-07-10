@@ -18,8 +18,8 @@ const login = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized' });
     }
     
-    const { id, name, role, status, condition, branch_id } = user;
-    const modifiedUser = { id, name, email, role, status, condition, branch_id };
+    const { id, name, role, branch_id } = user;
+    const modifiedUser = { id, name, email, role, branch_id };
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -53,8 +53,8 @@ const loginWithMobile = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized' });
     }
     
-    const { id, name, role, status, condition, branch_id } = user;
-    const modifiedUser = { id, name, email, role, status, condition, branch_id };
+    const { id, name, role, branch_id } = user;
+    const modifiedUser = { id, name, email, role, branch_id };
 
     // Validasi password
     const isPasswordValid = await bcrypt.compare(password, user.password);

@@ -73,15 +73,7 @@ const createUser = async (req, res) => {
     if (emailExist) {
       return errorResponse(res, "Email sudah terdaftar", 400);
     }
-
-    if (!validateStatus(status)) {
-      return errorResponse(res, "Status tidak valid", 400);
-    }
-
-    if (!validateCondition(condition)) {
-      return errorResponse(res, "Kondisi tidak valid", 400);
-    }
-
+    
     if (!validateRole(role)) {
       return errorResponse(res, "Role tidak valid", 400);
     }
@@ -96,8 +88,6 @@ const createUser = async (req, res) => {
       email,
       password: passwordBcrypt,
       role,
-      status,
-      condition,
       branch_id,
     });
     res.json(user);
@@ -109,7 +99,7 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, password, role, status, condition, branch_id } =
+    const { name, email, password, role, branch_id } =
       req.body;
     const user = await User.findByPk(id);
 
@@ -128,14 +118,6 @@ const updateUser = async (req, res) => {
       }
     }
 
-    if (status && !validateStatus(status)) {
-      return errorResponse(res, "Status tidak valid", 400);
-    }
-
-    if (condition && !validateCondition(condition)) {
-      return errorResponse(res, "Kondisi tidak valid", 400);
-    }
-
     if (role && !validateRole(role)) {
       return errorResponse(res, "Role tidak valid", 400);
     }
@@ -150,10 +132,7 @@ const updateUser = async (req, res) => {
     const updatedData = {
       name: name || user.name, // menggunakan nilai asli jika tidak ada pada req.body
       email: email || user.email,
-      password: password || user.password,
       role: role || user.role,
-      status: status || user.status,
-      condition: condition || user.condition,
       branch_id: branch_id || user.branch_id,
     };
 

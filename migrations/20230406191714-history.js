@@ -9,9 +9,15 @@ module.exports = {
         autoIncrement: true,
         allowNull: false
       },
-      name: {
-        type: Sequelize.STRING,
+      sensor_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'sensor',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       user_id: {
         type: Sequelize.INTEGER,
@@ -27,8 +33,8 @@ module.exports = {
         type: Sequelize.TEXT('long'),
         allowNull: true
       },
-      status: {
-        type: Sequelize.ENUM('none', 'emergency'),
+      isEmergency: {
+        type: Sequelize.BOOLEAN,
         allowNull: false
       },
       date: {
@@ -46,6 +52,8 @@ module.exports = {
           model: 'branch',
           key: 'id'
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

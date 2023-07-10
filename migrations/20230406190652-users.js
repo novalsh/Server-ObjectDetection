@@ -22,16 +22,7 @@ module.exports = {
         allowNull: false
       },
       role: {
-        type: Sequelize.ENUM('superadmin', 'admin', 'user','security'),
-        allowNull: false
-      },
-      status: {
-        type: Sequelize.ENUM('active', 'inactive'),
-        allowNull: false
-      },
-      condition: {
-        type: Sequelize.ENUM('none', 'emergency'),
-        defaultValue: 'none',
+        type: Sequelize.ENUM('superadmin', 'admin','security'),
         allowNull: false
       },
       branch_id: {

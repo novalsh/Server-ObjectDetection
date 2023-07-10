@@ -63,15 +63,15 @@ const getHistoryByToken = async (req, res) => {
 
 const createHistory = async (req, res, photo_url) => { 
     try {
-        const { name, description, date, user_id, branch_id } = req.body;
+        const { sensor_id, description, date, user_id, branch_id, isEmergency } = req.body;
         const dataHistory = await History.create({
-            name,
+            sensor_id,
             description,
             date,
             photo_url,
             user_id,
             branch_id,
-            status: 'none' // status default adalah 'aman'
+            isEmergency,
         });
         res.json(dataHistory);
     } catch (error) {
