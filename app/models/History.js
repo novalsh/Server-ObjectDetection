@@ -6,13 +6,13 @@ const User = require('./Users');
 const Branch = require('./Branch');
 const Sensor = require('./Sensor');
 
-  class History extends Model {
-    static associate(models) {
-      History.belongsTo(User, { foreignKey: 'user_id', as: 'user'});
-      History.belongsTo(Branch, { foreignKey: 'branch_id', as: 'branch'});
-      History.belongsTo(Sensor, { foreignKey: 'sensor_id', as: 'sensor'});
-    }
-  };
+class History extends Model {
+  static associate(models) {
+    History.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+    History.belongsTo(Branch, { foreignKey: 'branch_id', as: 'branch' });
+    History.belongsTo(Sensor, { foreignKey: 'sensor_id', as: 'sensor' });
+  }
+}
   
   History.init({
     id: {
@@ -66,9 +66,5 @@ const Sensor = require('./Sensor');
     modelName: 'History',
     tableName: 'history'
   });
-
-  // History.belongsTo(User, { foreignKey: 'user_id', as: 'user'});
-  // History.belongsTo(Branch, { foreignKey: 'branch_id', as: 'branch'});
-  // History.belongsTo(Sensor, { foreignKey: 'sensor_id', as: 'sensor'});
 
   module.exports = History;

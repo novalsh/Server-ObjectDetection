@@ -9,6 +9,13 @@ const HistoryRoute = require("./app/routes/History");
 const SensorRoute = require("./app/routes/Sensor");
 const AuthRoute = require("./app/routes/AuthRoutes");
 const { userJoin } = require("./utils/users");
+const User = require("./app/models/Users");
+const History = require("./app/models/History");
+
+User.associate({ History }); 
+History.associate({ User });
+
+
 
 const app = express();
 
