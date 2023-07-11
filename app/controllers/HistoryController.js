@@ -2,6 +2,7 @@ const History = require('../models/History');
 const multer = require('multer');
 const path = require('path');
 const User = require('../models/Users');
+const Sensor = require('../models/Sensor');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -53,6 +54,19 @@ const getHistoryByToken = async (req, res) => {
         const loggedInAdminBranchId = req.user.branch_id;
         const dataHistory = await History.findAll({
             where: { branch_id: loggedInAdminBranchId },
+            include: [
+                {
+                    model: User,
+                    as: 'user',
+                    attributes: {
+                        exclude: ['password']
+                    }
+                },
+                {
+                    model: Sensor,
+                    as: 'sensor',
+                }
+            ],
         });
         res.json(dataHistory);
     } catch (error) {

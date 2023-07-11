@@ -2,10 +2,13 @@
 
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
+const History = require('./History');
+const Branch = require('./Branch');
 
   class Sensor extends Model {
     static associate(models) {
-      Sensor.belongsTo(models.Branch, { foreignKey: 'branch_id' });
+      Sensor.belongsTo(Branch, { foreignKey: 'branch_id', as: 'branch' });
+      Sensor.hasMany(History, { foreignKey: 'sensor_id', as: 'history'});
     }
   };
   
@@ -60,5 +63,7 @@ const sequelize = require('../../config/database');
     modelName: 'Sensor',
     tableName: 'sensor'
   });
+
+  // Sensor.hasOne(History, { foreignKey: 'sensor_id', as: 'history' });
 
 module.exports = Sensor;

@@ -2,10 +2,13 @@
 
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
+const History = require('./History');
+const Branch = require('./Branch');
 
   class User extends Model {
     static associate(models) {
-      User.belongsTo(models.Branch, { foreignKey: 'branch_id' });
+      User.belongsTo(Branch, { foreignKey: 'branch_id', as: 'branch'});
+      User.hasMany(History, { foreignKey: 'user_id', as: 'history' });
     }
   };
   
@@ -54,5 +57,7 @@ const sequelize = require('../../config/database');
     modelName: 'User',
     tableName: 'users'
   });
+
+  // User.hasMany(History, { foreignKey: 'user_id', as: 'history' });
 
 module.exports = User;

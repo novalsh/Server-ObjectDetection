@@ -2,12 +2,15 @@
 
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
+const User = require('./Users');
+const Branch = require('./Branch');
+const Sensor = require('./Sensor');
 
   class History extends Model {
     static associate(models) {
-      History.belongsTo(models.User, { foreignKey: 'user_id' });
-      History.belongsTo(models.Branch, { foreignKey: 'branch_id' });
-      History.belongsTo(models.Sensor, { foreignKey: 'sensor_id' });
+      History.belongsTo(User, { foreignKey: 'user_id', as: 'user'});
+      History.belongsTo(Branch, { foreignKey: 'branch_id', as: 'branch'});
+      History.belongsTo(Sensor, { foreignKey: 'sensor_id', as: 'sensor'});
     }
   };
   
@@ -20,11 +23,11 @@ const sequelize = require('../../config/database');
     },
     sensor_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     user_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     description: {
       type: DataTypes.STRING,
@@ -44,7 +47,7 @@ const sequelize = require('../../config/database');
     },
     branch_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     createdAt: {
       allowNull: false,
@@ -63,5 +66,9 @@ const sequelize = require('../../config/database');
     modelName: 'History',
     tableName: 'history'
   });
+
+  // History.belongsTo(User, { foreignKey: 'user_id', as: 'user'});
+  // History.belongsTo(Branch, { foreignKey: 'branch_id', as: 'branch'});
+  // History.belongsTo(Sensor, { foreignKey: 'sensor_id', as: 'sensor'});
 
   module.exports = History;
