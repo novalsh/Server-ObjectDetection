@@ -4,7 +4,7 @@
   "description": "Sinamlab",
   "main": "index.js",
   "engines": {
-    "node": "19.8.1"
+    "node": "14.x"
   },
   "scripts": {
     "start": "nodemon index.js",
