@@ -12,10 +12,10 @@ const { userJoin } = require("./utils/users");
 const User = require("./app/models/Users");
 const History = require("./app/models/History");
 
+const mysql = require("mysql");
+
 User.associate({ History }); 
 History.associate({ User });
-
-
 
 const app = express();
 
